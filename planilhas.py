@@ -1,10 +1,8 @@
 
 from openpyxl import Workbook
 from openpyxl import load_workbook
-import numpy as np
 from bs4 import BeautifulSoup
 import requests
-import smtplib
 
 def whattomine(URL):
         headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36"}
