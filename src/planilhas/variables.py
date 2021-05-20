@@ -1,0 +1,58 @@
+
+FILENAME = 'Teste.xlsx'
+
+DATA = {
+    4:{
+        'formula':"=A29/H3",
+        'origin':'D3',
+        'type':1
+    }, 
+    5:{
+        'formula':"=F3-G3",
+        'origin':'E3',
+        'type':1
+    },
+    6:{
+        'formula':"=F29*H3",
+        'origin':'F3',
+        'type':1
+    },
+    7:{
+        'formula':"=G29*H3",
+        'origin':'G3',
+        'type':1
+    },
+    9:{
+        'value':0.15,
+        'type':2
+    },
+    10:{
+        'formula':"=I3/12",
+        'origin':'J3',
+        'type':1
+    },
+    11:{
+        'formula':"=C3/(G3-(J3*C3))",
+        'origin':'K3',
+        'type':1
+    },
+    12:{
+        'value':1,
+        'type':2
+    },
+    13:{
+        'formula':"=((C3*12)/K3)*L3",
+        'origin':'M3',
+        'type':1
+    },
+    14:{
+        'formula':"=C3*L3",
+        'origin':'N3',
+        'type':1
+    },
+    15:{
+        'formula':"=(12/K3)*100",
+        'origin':'O3',
+        'type':1
+    }
+}
