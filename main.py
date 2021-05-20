@@ -5,8 +5,7 @@ end = False
 while end == False:
     resposta = int(input("\n 1: Criar planilha \n 2: Atualizar tudo \n 3: Atualizar um aspecto \n 0: Sair \n Digite aqui: "))
     if resposta == 1:
-        #criar planilha
-        None
+        criar_planilha.criar_planilha()
     elif resposta == 2:
         print("\n Digite o local do arquivo que deseja atualizar")
         print(" Exemplo: /Users/daniel/Computacao/Python_excel_1/env/project/Minerando_crypto.xlsx")
