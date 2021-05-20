@@ -1,6 +1,7 @@
 from openpyxl import Workbook
 from openpyxl import load_workbook
 from openpyxl.formula.translate import Translator
+from main import FILENAME
 
 wb= Workbook()
 
@@ -45,16 +46,18 @@ def criar_planilha():
         planilha.cell(row=x, column=13, value=Translator("=((C3*12)/K3)*L3", origin="M3").translate_formula(row_delta=x-3,col_delta=0))
     planilha['N3'] = "=C3*L3"
     for x in range(3,27):
-        planilha.cell(row=x, column=15, value=Translator("=C3*L3", origin="N3").translate_formula(row_delta=x-3,col_delta=0))
+        planilha.cell(row=x, column=14, value=Translator("=C3*L3", origin="N3").translate_formula(row_delta=x-3,col_delta=0))
     planilha['O3'] = "=(12/K3)*100"
     for x in range(3,27):
-        planilha.cell(row=x, column=16, value=Translator("=(12/K3)*100", origin="O3").translate_formula(row_delta=x-3,col_delta=0))
+        planilha.cell(row=x, column=15, value=Translator("=(12/K3)*100", origin="O3").translate_formula(row_delta=x-3,col_delta=0))
     planilha['P3'] = "=SOMA(P4:P26)"; planilha['P5'] = 300; planilha['P7'] = 550; planilha['P9'] = 600; planilha['P11'] = 150
     planilha['P13'] = 100; planilha['P15'] = 100
     planilha['Q3'] = "=P3+SOMA(N3:N26)"
     planilha['R3'] = "=SOMA(M3:M26)"
     planilha['S3'] = "=(R3/Q3)*100"
     print("\nplanilha criada com sucesso")        
-    wb.save('Teste.xlsx')
+    wb.save(FILENAME)
 
+
+criar_planilha()
     

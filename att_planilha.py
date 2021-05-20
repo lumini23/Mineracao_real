@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 from bs4 import BeautifulSoup
 import requests
 import math
+from main import FILENAME
 
 def arredondar(num):
     return float( '%g' % (num))
@@ -122,26 +123,31 @@ class whattomine:
 wtm = whattomine()
 
 class planilha(whattomine):
-    def __init__(self,local):
-        self.wb = load_workbook(local)
-    def atualizarRentabilidade(self,local):
+    def __init__(self):
+        self.wb = load_workbook('Teste.xlsx')
+    def atualizarRentabilidade(self):
         planilha = self.wb.worksheets[0]
         for x in range(29,53):
             planilha.cell(row=x,column=6,value=wtm.whattomineRent(x-29))
         print(" Rentabilidade da planilha atualizada com sucesso")
-        self.wb.save("/Users/daniel/Computacao/Python_excel_1/env/project/Minerando_crypto.xlsx")
+        self.wb.save(FILENAME)
     
-    def atualizarDolar(self,local):
+    def atualizarDolar(self):
         planilha = self.wb.worksheets[0]
         dolar = getDolar()
         for x in range(3,27):
             planilha.cell(row=x, column=8, value=dolar)
         print(" Valor dolar atualizado com sucesso")
-        self.wb.save("/Users/daniel/Computacao/Python_excel_1/env/project/Minerando_crypto.xlsx")
+        self.wb.save(FILENAME)
     
-    def atualizarLucro(self,local):
+    def atualizarLucro(self):
         planilha = self.wb.worksheets[0]
         for x in range(29,53):
             planilha.cell(row=x,column=7,value=wtm.whattomineLucro(x-29))
         print(" Valor do lucro atualizado com sucesso")
-        self.wb.save("/Users/daniel/Computacao/Python_excel_1/env/project/Minerando_crypto.xlsx")
+        self.wb.save(FILENAME)
+
+pl = planilha()
+pl.atualizarDolar()
+pl.atualizarLucro()
+pl.atualizarRentabilidade()
