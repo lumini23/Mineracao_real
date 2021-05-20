@@ -124,7 +124,7 @@ wtm = whattomine()
 
 class planilha(whattomine):
     def __init__(self):
-        self.wb = load_workbook('Teste.xlsx')
+        self.wb = load_workbook(FILENAME)
     def atualizarRentabilidade(self):
         planilha = self.wb.worksheets[0]
         for x in range(29,53):
