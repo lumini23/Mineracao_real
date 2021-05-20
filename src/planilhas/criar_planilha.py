@@ -1,12 +1,22 @@
 from openpyxl import Workbook
 from openpyxl import load_workbook
 from openpyxl.formula.translate import Translator
-from main import FILENAME
+from variables import FILENAME,DATA
 
 wb= Workbook()
+planilha = wb.worksheets[0]
+
+
+def adding_rows(column,origin=None,formula=None,value=None):
+    if formula:
+        for x in range(3,27):
+            planilha.cell(row=x, column=column, value=Translator(formula, origin=origin).translate_formula(row_delta=x-3,col_delta=0))
+    if value: 
+        for x in range(3,27):
+            planilha.cell(row=x, column=column, value=value)
+
 
 def criar_planilha():
-    planilha = wb.worksheets[0]
 
     planilha['A1'] = "Ethereum"; planilha['A2'] = "Revendedora"; planilha['B2'] = "placa de video"; planilha['C2'] = "Investimento Placa (reais)"
     planilha['D2'] = "Preço energia (kWh em dolar)"; planilha['E2'] = "Custo energia/mes"; planilha['F2']= "Rendimento 100(%) eficiencia"; planilha ['G2'] = "Lucro 100(%) eficiencia/placa/mes"
@@ -19,37 +29,20 @@ def criar_planilha():
     planilha['B13'] = "GTX 1660"; planilha['B14'] = "GTX 1080 Ti"; planilha['B15'] = "GTX 1080"; planilha['B16'] = "6800 XT"; planilha['B17'] = "6800"; planilha['B18'] = "VII"; planilha['B19'] = "5700 XT"
     planilha['B20'] = "5700"; planilha['B21'] = "5600 XT"; planilha['B22'] = "Vega64"; planilha['B23'] = "Vega56"; planilha['B24'] = "580"; planilha['B25'] = "570"; planilha['B26'] = "480"
     
-    planilha['F3'] = "=F29*H3"
-    for x in range(3,27):
-        planilha.cell(row=x, column=6, value=Translator("=F29*H3", origin="F3").translate_formula(row_delta=x-3,col_delta=0))
-    planilha['G3'] = "=G29*H3"
-    for x in range(3,27):
-        planilha.cell(row=x, column=7, value=Translator("=G29*H3", origin="G3").translate_formula(row_delta=x-3,col_delta=0))
-    planilha['E3'] = "=F3-G3"
-    for x in range(3,27):
-        planilha.cell(row=x, column=5, value=Translator("=F3-G3", origin="E3").translate_formula(row_delta=x-3,col_delta=0))
-    planilha['D3'] = "=A29/H3"
-    for x in range(3,27):
-        planilha.cell(row=x, column=4, value=Translator("=A29/H3", origin="D3").translate_formula(row_delta=x-3,col_delta=0))
-    for x in range(3,27):
-        planilha.cell(row=x, column=9, value=0.15)
-    planilha['J3'] = "=I3/12"
-    for x in range(3,27):
-        planilha.cell(row=x, column=10, value=Translator("=I3/12", origin="J3").translate_formula(row_delta=x-3,col_delta=0))
-    planilha['K3'] = "=C3/(G3-(J3*C3))"
-    for x in range(3,27):
-        planilha.cell(row=x, column=11, value=Translator("=C3/(G3-(J3*C3))", origin="K3").translate_formula(row_delta=x-3,col_delta=0))
-    for x in range(3,27):
-        planilha.cell(row=x, column=12, value=1)
-    planilha['M3'] = "=((C3*12)/K3)*L3"
-    for x in range(3,27):
-        planilha.cell(row=x, column=13, value=Translator("=((C3*12)/K3)*L3", origin="M3").translate_formula(row_delta=x-3,col_delta=0))
-    planilha['N3'] = "=C3*L3"
-    for x in range(3,27):
-        planilha.cell(row=x, column=14, value=Translator("=C3*L3", origin="N3").translate_formula(row_delta=x-3,col_delta=0))
-    planilha['O3'] = "=(12/K3)*100"
-    for x in range(3,27):
-        planilha.cell(row=x, column=15, value=Translator("=(12/K3)*100", origin="O3").translate_formula(row_delta=x-3,col_delta=0))
+
+    for item in DATA:
+        if DATA[item]['type'] == 1:
+            planilha[DATA[item]['origin']] = DATA[item]['formula']
+
+      
+    for item in DATA:
+        if DATA[item]['type'] == 1:
+            adding_rows(item,origin=DATA[item]['origin'],formula=DATA[item]['formula'])
+        elif DATA[item]['type'] == 2:
+            adding_rows(item,value=DATA[item]['value'])
+
+
+
     planilha['P3'] = "=SOMA(P4:P26)"; planilha['P5'] = 300; planilha['P7'] = 550; planilha['P9'] = 600; planilha['P11'] = 150
     planilha['P13'] = 100; planilha['P15'] = 100
     planilha['Q3'] = "=P3+SOMA(N3:N26)"
@@ -60,4 +53,7 @@ def criar_planilha():
 
 
 criar_planilha()
-    
+
+
+
+

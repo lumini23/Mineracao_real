@@ -3,7 +3,7 @@ from openpyxl import load_workbook
 from bs4 import BeautifulSoup
 import requests
 import math
-from main import FILENAME
+from variables import FILENAME, DATA
 
 def arredondar(num):
     return float( '%g' % (num))
