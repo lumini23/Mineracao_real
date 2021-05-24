@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-dicionario ={}
+PICHAU ={}
 def arredondar(num):
     return float( '%g' % (num))
 
@@ -32,9 +32,16 @@ def number_array_to_value(array,posicao):
 
 def getName(array_text):
     for x in range(len(array_text)):
-        if (array_text[x] == "GTX") or (array_text[x] == "RTX") or (array_text[x] == "RX"):
+        if (array_text[x] == "GTX") or (array_text[x] == "RTX"):
             nome = array_text[x] + " " + array_text[x+1]
             return nome
+        elif (array_text[x] == "RX"):
+            if array_text[x+2] == "XT":
+                nome = array_text[x+1] + " " + array_text[x+2]
+                return nome
+            else:
+                nome = array_text[x+1]
+                return nome
 def check_array(array,item):
     teste = False
     for x in range(len(array)):
@@ -96,17 +103,17 @@ def makeDictionary(page):
     headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36"}
     site = requests.get(URL, headers=headers)
     soup = BeautifulSoup(site.content,'html.parser')  
-    x = len(dicionario)
+    x = len(PICHAU)
     for tag in soup.find_all('div',class_="product details product-item-details"):
         heading = tag.text
         heading_array = heading.split()
         if (getName(heading_array) != None) or (getPrice(heading_array) != "Produto indisponivel"): 
-            dicionario[x] = x
+            PICHAU[x] = x
             y = {}
             y['nome'] = getName(heading_array)
             y['memoria'] = getMemory(heading_array)
             y['preco'] = getPrice(heading_array)
-            dicionario[x] = y
+            PICHAU[x] = y
             x = x + 1
             
                 
@@ -121,12 +128,12 @@ def getLastPage():
 def attDictionary():
     page = getLastPage()
     indisponivel = False
+    print("atualizando dicionario...")
     for x in range(1,page+1):
         if indisponivel == False:
             string = str(x)
             makeDictionary(string)
-        if dicionario[len(dicionario)-1]['preco'] == "Produto indisponivel":
+        if PICHAU[len(PICHAU)-1]['preco'] == "Produto indisponivel":
             indisponivel = True
 attDictionary()
-for item in dicionario:
-    print(dicionario[item])
+
