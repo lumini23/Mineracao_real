@@ -26,24 +26,25 @@ def atualizando_precos():
     wb.save(FILENAME)
 
 def send_email():
-	email_content = "URL"
-	msg = email.message.Message()
-	msg['Subject'] = 'Preco baixou'
+    email_content = "URL"
+    msg = email.message.Message()
+    msg['Subject'] = 'Preco baixou'
+    msg['From'] = 'danielmattarteste@gmail.com'
+    msg['To'] = 'danielmattar2001@gmail.com'
+    password = 'ggsx tutb jvhz iaeo'
+    msg.add_header('Content-Type', 'text/html')
+    msg.set_payload(email_content)
 
-	msg['From'] = 'danielmattarteste@gmail.com'
-	msg['To'] = 'danielmattar2001@gmail.com'
-	password = 'teste@123'
-	msg.add_header('Content-Type', 'text/html')
-	msg.set_payload(email_content)
-
-	s = smtplib.SMTP('sntp.gmail.com: 587')
-	s.starttls()
-	s.login(msg['From'], password)
-	s.sendmail(msg['From'], [msg['To']], msg.as_string())
+    s = smtplib.SMTP('smtp.gmail.com: 587')
+    s.starttls()
+    s.login(msg['From'],password)
+    s.sendmail(msg['From'], [msg['To']], msg.as_string())
 
 def checkROIC():
     ROIC = wbxl.sheets[0].range('O3','O26').value
     for x in range(len(ROIC)):
         if ROIC[x] > 80.0:
+            print("aqui")
             send_email()
 
+send_email()
