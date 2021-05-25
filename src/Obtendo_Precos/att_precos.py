@@ -1,13 +1,16 @@
-from Pichau import PICHAU
+# from Pichau import PICHAU
 from planilhas.variables import URLS,FILENAME
 from openpyxl import load_workbook
 import smtplib
 import email.message
 import xlwings as xw
 from Magalu import MAGALU
+ 
+wb = load_workbook(FILENAME)
+# PARA WBXL FUNCIONAR PLANILHA TEM QUE ESTAR ABERTA!!!!
+wbxl = xw.Book(FILENAME)
 
 wbxl=xw.Book(FILENAME)
-wb = load_workbook(FILENAME)
 planilha = wb.worksheets[0]
 values = []
 array = []
@@ -48,4 +51,3 @@ def checkROIC():
             print("aqui")
             send_email()
 atualizando_precos(MAGALU)
-send_email()

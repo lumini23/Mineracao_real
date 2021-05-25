@@ -84,24 +84,38 @@ def makeDictionary(page):
             PICHAU[x] = y
             x = x + 1
             
-                
+def find_next(soup,page):
+    for x in range(6):
+        print("page: antes: ",page)
+        print("page.find_next_sibling(): ",page.find_next_sibling())
+        # print("page: depois: ",page)
+    page = page.get_text()
+    print("page: ",page)
+    return page
+
 def getLastPage():
-    URL = "https://www.pichau.com.br/hardware/placa-de-video?p=1&product_list_limit=48&product_list_order=price_desc"
+    URL = "https://www.pichau.com.br/hardware/placa-de-video?p=1&product_list_limit=48&product_list_order=price_desc&sort=price-desc"
     headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36"}
     site = requests.get(URL, headers=headers)
     soup = BeautifulSoup(site.content,'html.parser') 
-    page = soup.find('span',class_="text-page last").get_text()
-    page = int(page)
+    todos = soup.find('ul',class_="MuiPagination-ul")
+    print(todos)
+    page = todos.contents[0]
+    page = find_next(soup,page)
     return page
+
+    # find_next(7)
 def attDictionary():
-    page = getLastPage()
+    # page = getLastPage()
+    page = 3
     indisponivel = False
     print("atualizando dicionario...")
     for x in range(1,page+1):
         if indisponivel == False:
             string = str(x)
             makeDictionary(string)
-        if PICHAU[len(PICHAU)-1]['preco'] == "Produto indisponivel":
+        if PICHAU[len(PICHAU)]['preco'] == "Produto indisponivel":
             indisponivel = True
 attDictionary()
-
+for item in PICHAU:
+    print(PICHAU[item])

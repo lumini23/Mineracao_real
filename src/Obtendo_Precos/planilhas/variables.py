@@ -1,5 +1,5 @@
 
-FILENAME = 'Teste.xlsx'
+FILENAME = '/Users/daniel/Computacao/Planilhas_real/Mineracao_real/Teste.xlsx'
 
 DATA = {
     4:{

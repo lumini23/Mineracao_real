@@ -1,20 +1,25 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-from ferramentas import number_array_to_value,check_array
+from ferramentas import number_array_to_value,check_array,cleanName,cleanMemory
 
 
 MAGALU = {}
 
+# def getName(array_text):
+#     for x in range(len(array_text)):
+#         n = re.search(pattern="GTX",string=array_text[x])
+#         z = re.search(pattern="RTX",string=array_text[x])
+#         w = re.search(pattern="RX",string=array_text[x]) 
+#         if (n or z or w) != None:
+#             nome = array_text[x] + " " + array_text[x+1]
+#             return nome
 def getName(array_text):
-    for x in range(len(array_text)):
-        n = re.search(pattern="GTX",string=array_text[x])
-        z = re.search(pattern="RTX",string=array_text[x])
-        w = re.search(pattern="RX",string=array_text[x]) 
-        if (n or z or w) != None:
-            nome = array_text[x] + " " + array_text[x+1]
-            return nome
-    
+    for x in range(3,len(array_text)//2):
+        nome = cleanName(array_text[x],array_text[x+1],array_text[x+2])
+        if nome != None:
+            print(array_text)
+            return nome   
         
 
 def getPrice(array_text):
@@ -48,28 +53,36 @@ def getPrice(array_text):
     else:
         return "Produto indisponivel"
 
-def getMemory(array_text):
-    first = True
-    x = 0
-    while (x < len(array_text)) and (first == True):
-        if (array_text[x] == "GTX") or (array_text[x] == "RTX") or (array_text[x] == "RX") or (array_text[x] == "gtx"):   
-            first == False 
-            for y in range(x,len(array_text)):
-                array = array_text[y]
-                primeiro = True
-                z = 0
-                while (z < len(array) - 1) and primeiro == True :
-                    if array[z] == ("G" or "g") and array[z+1] == ("B" or "b"):
-                        primeiro = False
-                        try:
-                            memoria = int(array[0])*10 + int(array[1])
-                            return memoria
-                        except:
-                            memoria = int(array[0])
-                            return memoria
+# def getMemory(array_text):
+#     first = True
+#     x = 0
+#     while (x < len(array_text)) and (first == True):
+#         if (array_text[x] == "GTX") or (array_text[x] == "RTX") or (array_text[x] == "RX") or (array_text[x] == "gtx"):   
+#             first == False 
+#             for y in range(x,len(array_text)):
+#                 array = array_text[y]
+#                 primeiro = True
+#                 z = 0
+#                 while (z < len(array) - 1) and primeiro == True :
+#                     if array[z] == ("G" or "g") and array[z+1] == ("B" or "b"):
+#                         primeiro = False
+#                         try:
+#                             memoria = int(array[0])*10 + int(array[1])
+#                             return memoria
+#                         except:
+#                             memoria = int(array[0])
+#                             return memoria
 
-                    z = z + 1 
-        x = x + 1
+#                     z = z + 1 
+#         x = x + 1
+
+def getMemory(array_text):
+    for x in range(3,len(array_text)):
+        memoria = cleanMemory(array_text[x],array_text[x-1])
+        if memoria != None:
+            return memoria
+            
+        
 
 def makeDictionary():
     URL = "https://www.magazineluiza.com.br/placa-de-video/informatica/s/in/pcvd/brand---asus--nvidia/?sfilters=0"
@@ -77,15 +90,19 @@ def makeDictionary():
     site = requests.get(URL, headers=headers)
     soup = BeautifulSoup(site.content,'html.parser')  
     x = len(MAGALU)
+
     for tag in soup.find_all('a',attrs={"name":"linkToProduct"}):
         heading = tag.text
         heading_array = heading.split()
-        if (getName(heading_array) != None) or (getPrice(heading_array) != "Produto indisponivel"): 
+        nome = getName(heading_array)
+        memoria = getMemory(heading_array)
+        preco = getPrice(heading_array)
+        if nome != None: 
             MAGALU[x] = x
             y = {}
-            y['nome'] = getName(heading_array)
-            y['memoria'] = getMemory(heading_array)
-            y['preco'] = getPrice(heading_array)
+            y['nome'] = nome
+            y['memoria'] = memoria
+            y['preco'] = preco
             MAGALU[x] = y
             x = x + 1
 makeDictionary()
