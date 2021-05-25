@@ -37,7 +37,6 @@ def check_array(array,item):
 def RTX2000(name,atribute):
     nome = None
     if re.search(pattern="2060",string=name) != None:
-        print("\n2060")
         nome = "RTX 2060" 
     elif re.search(pattern="2070",string=name) != None:
         nome = "RTX 2070"
@@ -56,7 +55,6 @@ def RTX3000(name,atribute):
     elif re.search(pattern="3090",string=name) != None:
         nome = "RTX 3090"
     elif re.search(pattern="3060",string=name) != None:
-        print("\n3060")
         if re.search(pattern="TI",string=name) != None:
             nome = "RTX 3060 Ti"
         elif re.search(pattern="TI",string=atribute) != None:
