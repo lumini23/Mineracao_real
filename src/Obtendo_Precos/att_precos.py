@@ -4,6 +4,7 @@ from openpyxl import load_workbook
 import smtplib
 import email.message
 import xlwings as xw
+from Magalu import MAGALU
 
 wbxl=xw.Book(FILENAME)
 wb = load_workbook(FILENAME)
@@ -15,13 +16,13 @@ for row in planilha.iter_rows(min_row=3,min_col=3, max_col=3, max_row=26, values
 for x in range(len(values)):
     array.append(float(values[x][0]))
 
-def atualizando_precos():
-    for item in PICHAU:
-        if PICHAU[item]['preco'] != "Produto indisponivel":
+def atualizando_precos(DATA):
+    for item in DATA:
+        if DATA[item]['preco'] != "Produto indisponivel":
             for x in URLS:
-                if PICHAU[item]['nome'] == URLS[x]['placa']:
-                    if PICHAU[item]['preco'] < array[x]:
-                        planilha.cell(row=x+3,column=3,value=PICHAU[item]['preco'])
+                if DATA[item]['nome'] == URLS[x]['placa']:
+                    if DATA[item]['preco'] < array[x]:
+                        planilha.cell(row=x+3,column=3,value=DATA[item]['preco'])
     print("atualizacao concluida")
     wb.save(FILENAME)
 
@@ -46,5 +47,5 @@ def checkROIC():
         if ROIC[x] > 80.0:
             print("aqui")
             send_email()
-
+atualizando_precos(MAGALU)
 send_email()

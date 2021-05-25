@@ -2,40 +2,44 @@ from bs4 import BeautifulSoup
 import requests
 import re
 from ferramentas import number_array_to_value,check_array
-PICHAU ={}
+
+
+MAGALU = {}
 
 def getName(array_text):
     for x in range(len(array_text)):
-        if (array_text[x] == "GTX") or (array_text[x] == "RTX"):
+        n = re.search(pattern="GTX",string=array_text[x])
+        z = re.search(pattern="RTX",string=array_text[x])
+        w = re.search(pattern="RX",string=array_text[x]) 
+        if (n or z or w) != None:
             nome = array_text[x] + " " + array_text[x+1]
             return nome
-        elif (array_text[x] == "RX"):
-            if array_text[x+2] == "XT":
-                nome = array_text[x+1] + " " + array_text[x+2]
-                return nome
-            else:
-                nome = array_text[x+1]
-                return nome
+    
+        
 
 def getPrice(array_text):
     first = True
+    primeiro = True
     x = 0
     text = ""
     while x < len(array_text) and first == True:
-        if array_text[x] == "vista":
+        if array_text[x] == "vistaou":
             first = False
-            text = array_text[x+1]
+            text = array_text[x-2]
         x = x + 1
-    if first == False:
+    if first == True:
+        while x < len(array_text) and primeiro == True:
+            if array_text[x] == "por":
+                primeiro = False
+                text = array_text[x+1]
+    if (first == False) or (primeiro == False):
         array = [None]*len(text)
         for x in range(len(text)):
             array[x] = text[x]
-        if check_array(array,".") == True:
-            array.remove(".")
-        array.remove("R")
-        array.remove("$")
+        if check_array(array,",") == True:
+            array.remove(",")
         for x in range(len(array)):
-            if array[x] == ",":
+            if array[x] == ".":
                 posicao = x
             else:
                 array[x] = float(array[x])
@@ -43,18 +47,19 @@ def getPrice(array_text):
         return preco
     else:
         return "Produto indisponivel"
+
 def getMemory(array_text):
     first = True
     x = 0
     while (x < len(array_text)) and (first == True):
-        if (array_text[x] == "GTX") or (array_text[x] == "RTX") or (array_text[x] == "RX"):   
+        if (array_text[x] == "GTX") or (array_text[x] == "RTX") or (array_text[x] == "RX") or (array_text[x] == "gtx"):   
             first == False 
             for y in range(x,len(array_text)):
                 array = array_text[y]
                 primeiro = True
                 z = 0
                 while (z < len(array) - 1) and primeiro == True :
-                    if array[z] == "G" and array[z+1] == "B":
+                    if array[z] == ("G" or "g") and array[z+1] == ("B" or "b"):
                         primeiro = False
                         try:
                             memoria = int(array[0])*10 + int(array[1])
@@ -66,42 +71,23 @@ def getMemory(array_text):
                     z = z + 1 
         x = x + 1
 
-def makeDictionary(page):
-    URL = "https://www.pichau.com.br/hardware/placa-de-video?p="+page+"&product_list_limit=48&product_list_order=price_desc"
+def makeDictionary():
+    URL = "https://www.magazineluiza.com.br/placa-de-video/informatica/s/in/pcvd/brand---asus--nvidia/?sfilters=0"
     headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36"}
     site = requests.get(URL, headers=headers)
     soup = BeautifulSoup(site.content,'html.parser')  
-    x = len(PICHAU)
-    for tag in soup.find_all('div',class_="product details product-item-details"):
+    x = len(MAGALU)
+    for tag in soup.find_all('a',attrs={"name":"linkToProduct"}):
         heading = tag.text
         heading_array = heading.split()
         if (getName(heading_array) != None) or (getPrice(heading_array) != "Produto indisponivel"): 
-            PICHAU[x] = x
+            MAGALU[x] = x
             y = {}
             y['nome'] = getName(heading_array)
             y['memoria'] = getMemory(heading_array)
             y['preco'] = getPrice(heading_array)
-            PICHAU[x] = y
+            MAGALU[x] = y
             x = x + 1
-            
-                
-def getLastPage():
-    URL = "https://www.pichau.com.br/hardware/placa-de-video?p=1&product_list_limit=48&product_list_order=price_desc"
-    headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36"}
-    site = requests.get(URL, headers=headers)
-    soup = BeautifulSoup(site.content,'html.parser') 
-    page = soup.find('span',class_="text-page last").get_text()
-    page = int(page)
-    return page
-def attDictionary():
-    page = getLastPage()
-    indisponivel = False
-    print("atualizando dicionario...")
-    for x in range(1,page+1):
-        if indisponivel == False:
-            string = str(x)
-            makeDictionary(string)
-        if PICHAU[len(PICHAU)-1]['preco'] == "Produto indisponivel":
-            indisponivel = True
-attDictionary()
-
+makeDictionary()
+for item in MAGALU:
+    print(MAGALU[item])
