@@ -97,7 +97,3 @@ def attDictionary():
         if PICHAU[len(PICHAU)-1]['preco'] == "Produto indisponivel":
             indisponivel = True
 attDictionary()
-
-for item in PICHAU:
-    print("\nitem: ",item)
-    print(PICHAU[item])
