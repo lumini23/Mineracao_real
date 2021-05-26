@@ -207,10 +207,10 @@ def cleanMemory(memory,value):
             if memory[z] == "G" and memory[z+1] == "B":
                 primeiro = False
                 try:
-                    memoria = int(memory[0])*10 + int(memory[1])
+                    memoria = int(memory[z-2])*10 + int(memory[z-1])
                     return memoria
                 except:
-                    memoria = int(memory[0])
+                    memoria = int(memory[z-1])
                     return memoria
             z = z + 1
         try:
@@ -222,3 +222,28 @@ def cleanMemory(memory,value):
     
     else:
         return None
+def cleanPrice(preco_text,pontuacao):
+    array = []
+    for x in range(len(preco_text)):
+        array.append(preco_text[x])
+    if check_array(array,"R") == True:
+        array.remove("R")
+    if check_array(array,"$") == True:
+        array.remove("$")
+    if pontuacao == ",":
+        if check_array(array,".") == True:
+                array.remove(".")
+    else:
+        if check_array(array,",") == True:
+            array.remove(",")
+    for x in range(len(array)):
+        if array[x] == pontuacao:
+            posicao = x
+    if len(array) > posicao + 3:
+        for x in range(posicao + 3,len(array)):
+            array.pop(x)   
+    for x in range(len(array)):
+        if x != posicao:    
+            array[x] = float(array[x])
+    value = number_array_to_value(array,posicao)
+    return value
